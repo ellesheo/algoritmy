@@ -1,134 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    class Node
+    class WordCount
     {
-        public int Key;
-        public Node Left;
-        public Node Right;
-        public int Height;
-        public Node(int key)
+        public string Word;
+        public int Count;
+        public WordCount(string word, int count)
         {
-            Key = key;
-            Height = 1;
+            Word = word;
+            Count = count;
         }
     }
 
-    class AvlTree
+    class MaxHeap
     {
-        public Node Root;
+        List<WordCount> data = new List<WordCount>();
 
-        int GetHeight(Node node)
-        {
-            if (node == null) return 0;
-            return node.Height;
-        }
+        public int Size => data.Count;
 
-        int GetBalance(Node node)
+        public void Insert(WordCount item)
         {
-            if (node == null) return 0;
-            return GetHeight(node.Left) - GetHeight(node.Right);
-        }
-
-        void UpdateHeight(Node node)
-        {
-            node.Height = 1 + Math.Max(GetHeight(node.Left), GetHeight(node.Right));
-        }
-
-        Node RotateRight(Node y)
-        {
-            Node x = y.Left;
-            Node T2 = x.Right;
-            x.Right = y;
-            y.Left = T2;
-            UpdateHeight(y);
-            UpdateHeight(x);
-            return x;
-        }
-
-        Node RotateLeft(Node x)
-        {
-            Node y = x.Right;
-            Node T2 = y.Left;
-            y.Left = x;
-            x.Right = T2;
-            UpdateHeight(x);
-            UpdateHeight(y);
-            return y;
-        }
-
-        Node Balance(Node node)
-        {
-            UpdateHeight(node);
-            int balance = GetBalance(node);
-            if (balance > 1 && GetBalance(node.Left) >= 0)
-                return RotateRight(node);
-            if (balance > 1 && GetBalance(node.Left) < 0)
+            data.Add(item);
+            int i = data.Count - 1;
+            while (i > 0 && data[i].Count > data[(i - 1) / 2].Count)
             {
-                node.Left = RotateLeft(node.Left);
-                return RotateRight(node);
+                int parent = (i - 1) / 2;
+                Swap(i, parent);
+                i = parent;
             }
-            if (balance < -1 && GetBalance(node.Right) <= 0)
-                return RotateLeft(node);
-            if (balance < -1 && GetBalance(node.Right) > 0)
+        }
+
+        public WordCount ExtractMax()
+        {
+            WordCount max = data[0];
+            int last = data.Count - 1;
+            data[0] = data[last];
+            data.RemoveAt(last);
+
+            int i = 0;
+            int n = data.Count;
+            while (true)
             {
-                node.Right = RotateRight(node.Right);
-                return RotateLeft(node);
+                int left = 2 * i + 1;
+                int right = 2 * i + 2;
+                int largest = i;
+                if (left < n && data[left].Count > data[largest].Count) largest = left;
+                if (right < n && data[right].Count > data[largest].Count) largest = right;
+                if (largest == i) break;
+                Swap(i, largest);
+                i = largest;
             }
-            return node;
+            return max;
         }
 
-        public void Add(int key)
+        void Swap(int a, int b)
         {
-            Root = Insert(Root, key);
-        }
-
-        Node Insert(Node node, int key)
-        {
-            if (node == null) return new Node(key);
-            if (key < node.Key) node.Left = Insert(node.Left, key);
-            else if (key > node.Key) node.Right = Insert(node.Right, key);
-            else return node;
-            return Balance(node);
-        }
-
-        public void Remove(int key)
-        {
-            Root = Delete(Root, key);
-        }
-
-        Node Delete(Node node, int key)
-        {
-            if (node == null) return null;
-            if (key < node.Key) node.Left = Delete(node.Left, key);
-            else if (key > node.Key) node.Right = Delete(node.Right, key);
-            else
-            {
-                if (node.Left == null) return node.Right;
-                if (node.Right == null) return node.Left;
-                Node min = node.Right;
-                while (min.Left != null) min = min.Left;
-                node.Key = min.Key;
-                node.Right = Delete(node.Right, min.Key);
-            }
-            return Balance(node);
-        }
-
-        public bool IsBalanced(Node node)
-        {
-            if (node == null) return true;
-            int balance = GetBalance(node);
-            if (balance > 1 || balance < -1) return false;
-            return IsBalanced(node.Left) && IsBalanced(node.Right);
-        }
-
-        public void InOrder(Node node)
-        {
-            if (node == null) return;
-            InOrder(node.Left);
-            Console.Write(node.Key + " ");
-            InOrder(node.Right);
+            WordCount temp = data[a];
+            data[a] = data[b];
+            data[b] = temp;
         }
     }
 }

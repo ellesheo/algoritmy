@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
@@ -6,31 +7,34 @@ namespace ConsoleApp4
     {
         static void Main(string[] args)
         {
-            int[] arr = { 10, 20, 30, 40, 50, 25 };
-            AvlTree tree = new AvlTree();
+            string text = "Алина бежала по дорожке, но Алина споткнулась и упала. Блин что же делать. Какая-то скользкая дорожка. Алина расстроилась";
 
-            Console.Write("Исходный массив: ");
-            foreach (int x in arr) Console.Write(x + " ");
-            Console.WriteLine();
+            text = text.ToLower();
+            string cleaned = "";
+            foreach (char c in text)
+            {
+                if (char.IsLetter(c) || c == ' ')
+                    cleaned += c;
+                else
+                    cleaned += ' ';
+            }
 
-            foreach (int x in arr) tree.Add(x);
+            string[] words = cleaned.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            Dictionary<string, int> counts = new Dictionary<string, int>();
+            foreach (string w in words)
+            {
+                if (counts.ContainsKey(w))
+                    counts[w]++;
+                else
+                    counts[w] = 1;
+            }
 
-            Console.Write("Обход: ");
-            tree.InOrder(tree.Root);
-            Console.WriteLine();
-            Console.WriteLine("Сбалансировано: " + tree.IsBalanced(tree.Root));
+            MaxHeap heap = new MaxHeap();
+            foreach (var pair in counts)
+                heap.Insert(new WordCount(pair.Key, pair.Value));
 
-            tree.Add(1);
-            Console.Write("После вставки 1: ");
-            tree.InOrder(tree.Root);
-            Console.WriteLine();
-            Console.WriteLine("Сбалансировано: " + tree.IsBalanced(tree.Root));
-
-            tree.Remove(10);
-            Console.Write("После удаления 10: ");
-            tree.InOrder(tree.Root);
-            Console.WriteLine();
-            Console.WriteLine("Сбалансировано: " + tree.IsBalanced(tree.Root));
+            WordCount top = heap.ExtractMax();
+            Console.WriteLine($"Самое частое слово: \"{top.Word}\" ({top.Count} раз)");
         }
     }
 }
