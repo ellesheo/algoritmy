@@ -4,14 +4,14 @@ namespace ConsoleApp4
 {
     class Heap
     {
-        public static void BuildHeap(int[] a)
+        public static void Postroenie(int[] a)
         {
             int n = a.Length;
             for (int i = n / 2 - 1; i >= 0; i--)
-                SiftDown(a, i, n);
+                Pogruzit(a, i, n);
         }
 
-        static void SiftDown(int[] a, int i, int n)
+        static void Pogruzit(int[] a, int i, int n)
         {
             while (true)
             {
@@ -21,30 +21,30 @@ namespace ConsoleApp4
                 if (left < n && a[left] > a[largest]) largest = left;
                 if (right < n && a[right] > a[largest]) largest = right;
                 if (largest == i) break;
-                Swap(a, i, largest);
+                Obmen(a, i, largest);
                 i = largest;
             }
         }
 
-        public static void HeapSort(int[] a)
+        public static void Sortirovka(int[] a)
         {
             int n = a.Length;
-            BuildHeap(a);
+            Postroenie(a);
             for (int end = n - 1; end > 0; end--)
             {
-                Swap(a, 0, end);
-                SiftDown(a, 0, end);
+                Obmen(a, 0, end);
+                Pogruzit(a, 0, end);
             }
         }
 
-        static void Swap(int[] a, int i, int j)
+        static void Obmen(int[] a, int i, int j)
         {
             int t = a[i];
             a[i] = a[j];
             a[j] = t;
         }
 
-        public static void Print(int[] a)
+        public static void Vyvod(int[] a)
         {
             foreach (int x in a) Console.Write(x + " ");
             Console.WriteLine();

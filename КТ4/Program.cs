@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ConsoleApp4
@@ -31,9 +31,9 @@ namespace ConsoleApp4
 
             MaxHeap heap = new MaxHeap();
             foreach (var pair in counts)
-                heap.Insert(new WordCount(pair.Key, pair.Value));
+                heap.Vstavka(new WordCount(pair.Key, pair.Value));
 
-            WordCount top = heap.ExtractMax();
+            WordCount top = heap.DostatMax();
             Console.WriteLine($"Самое частое слово: \"{top.Word}\" ({top.Count} раз)");
         }
     }

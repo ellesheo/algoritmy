@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ConsoleApp4
 {
@@ -19,90 +19,90 @@ namespace ConsoleApp4
     {
         public Node Root;
 
-        int GetHeight(Node node)
+        int Vysota(Node node)
         {
             if (node == null) return 0;
             return node.Height;
         }
 
-        int GetBalance(Node node)
+        int Balans(Node node)
         {
             if (node == null) return 0;
-            return GetHeight(node.Left) - GetHeight(node.Right);
+            return Vysota(node.Left) - Vysota(node.Right);
         }
 
-        void UpdateHeight(Node node)
+        void Obnovit(Node node)
         {
-            node.Height = 1 + Math.Max(GetHeight(node.Left), GetHeight(node.Right));
+            node.Height = 1 + Math.Max(Vysota(node.Left), Vysota(node.Right));
         }
 
-        Node RotateRight(Node y)
+        Node PravyPovorot(Node y)
         {
             Node x = y.Left;
             Node T2 = x.Right;
             x.Right = y;
             y.Left = T2;
-            UpdateHeight(y);
-            UpdateHeight(x);
+            Obnovit(y);
+            Obnovit(x);
             return x;
         }
 
-        Node RotateLeft(Node x)
+        Node LevyPovorot(Node x)
         {
             Node y = x.Right;
             Node T2 = y.Left;
             y.Left = x;
             x.Right = T2;
-            UpdateHeight(x);
-            UpdateHeight(y);
+            Obnovit(x);
+            Obnovit(y);
             return y;
         }
 
-        Node Balance(Node node)
+        Node Vyrovnyat(Node node)
         {
-            UpdateHeight(node);
-            int balance = GetBalance(node);
-            if (balance > 1 && GetBalance(node.Left) >= 0)
-                return RotateRight(node);
-            if (balance > 1 && GetBalance(node.Left) < 0)
+            Obnovit(node);
+            int balance = Balans(node);
+            if (balance > 1 && Balans(node.Left) >= 0)
+                return PravyPovorot(node);
+            if (balance > 1 && Balans(node.Left) < 0)
             {
-                node.Left = RotateLeft(node.Left);
-                return RotateRight(node);
+                node.Left = LevyPovorot(node.Left);
+                return PravyPovorot(node);
             }
-            if (balance < -1 && GetBalance(node.Right) <= 0)
-                return RotateLeft(node);
-            if (balance < -1 && GetBalance(node.Right) > 0)
+            if (balance < -1 && Balans(node.Right) <= 0)
+                return LevyPovorot(node);
+            if (balance < -1 && Balans(node.Right) > 0)
             {
-                node.Right = RotateRight(node.Right);
-                return RotateLeft(node);
+                node.Right = PravyPovorot(node.Right);
+                return LevyPovorot(node);
             }
             return node;
         }
 
-        public void Add(int key)
+        public void Dobavit(int key)
         {
-            Root = Insert(Root, key);
+            Root = Vstavka(Root, key);
         }
 
-        Node Insert(Node node, int key)
+        Node Vstavka(Node node, int key)
         {
             if (node == null) return new Node(key);
-            if (key < node.Key) node.Left = Insert(node.Left, key);
-            else if (key > node.Key) node.Right = Insert(node.Right, key);
+            if (key < node.Key) node.Left = Vstavka(node.Left, key);
+            else if (key > node.Key) node.Right = Vstavka(node.Right, key);
             else return node;
-            return Balance(node);
+            return Vyrovnyat(node);
         }
 
-        public void Remove(int key)
+        public void Udalit(int key)
         {
-            Root = Delete(Root, key);
+            Root = Udalenie(Root, key);
         }
 
-        Node Delete(Node node, int key)
+        Node Udalenie(Node node, int key)
         {
             if (node == null) return null;
-            if (key < node.Key) node.Left = Delete(node.Left, key);
-            else if (key > node.Key) node.Right = Delete(node.Right, key);
+            if (key < node.Key) node.Left = Udalenie(node.Left, key);
+            else if (key > node.Key) node.Right = Udalenie(node.Right, key);
             else
             {
                 if (node.Left == null) return node.Right;
@@ -110,25 +110,25 @@ namespace ConsoleApp4
                 Node min = node.Right;
                 while (min.Left != null) min = min.Left;
                 node.Key = min.Key;
-                node.Right = Delete(node.Right, min.Key);
+                node.Right = Udalenie(node.Right, min.Key);
             }
-            return Balance(node);
+            return Vyrovnyat(node);
         }
 
-        public bool IsBalanced(Node node)
+        public bool Proverka(Node node)
         {
             if (node == null) return true;
-            int balance = GetBalance(node);
+            int balance = Balans(node);
             if (balance > 1 || balance < -1) return false;
-            return IsBalanced(node.Left) && IsBalanced(node.Right);
+            return Proverka(node.Left) && Proverka(node.Right);
         }
 
-        public void InOrder(Node node)
+        public void Obhod(Node node)
         {
             if (node == null) return;
-            InOrder(node.Left);
+            Obhod(node.Left);
             Console.Write(node.Key + " ");
-            InOrder(node.Right);
+            Obhod(node.Right);
         }
     }
 }

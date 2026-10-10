@@ -9,17 +9,17 @@ namespace ConsoleApp4
             int[] arr = { 3, 9, 2, 1, 7, 5, 8, 4, 6 };
 
             Console.Write("Исходный массив: ");
-            Heap.Print(arr);
+            Heap.Vyvod(arr);
 
             int[] heap = (int[])arr.Clone();
-            Heap.BuildHeap(heap);
+            Heap.Postroenie(heap);
             Console.Write("Убывающая куча: ");
-            Heap.Print(heap);
+            Heap.Vyvod(heap);
 
             int[] sorted = (int[])arr.Clone();
-            Heap.HeapSort(sorted);
+            Heap.Sortirovka(sorted);
             Console.Write("После сортировки кучей ");
-            Heap.Print(sorted);
+            Heap.Vyvod(sorted);
         }
     }
 }

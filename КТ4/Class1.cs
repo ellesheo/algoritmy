@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ConsoleApp4
@@ -20,19 +20,19 @@ namespace ConsoleApp4
 
         public int Size => data.Count;
 
-        public void Insert(WordCount item)
+        public void Vstavka(WordCount item)
         {
             data.Add(item);
             int i = data.Count - 1;
             while (i > 0 && data[i].Count > data[(i - 1) / 2].Count)
             {
                 int parent = (i - 1) / 2;
-                Swap(i, parent);
+                Obmen(i, parent);
                 i = parent;
             }
         }
 
-        public WordCount ExtractMax()
+        public WordCount DostatMax()
         {
             WordCount max = data[0];
             int last = data.Count - 1;
@@ -49,13 +49,13 @@ namespace ConsoleApp4
                 if (left < n && data[left].Count > data[largest].Count) largest = left;
                 if (right < n && data[right].Count > data[largest].Count) largest = right;
                 if (largest == i) break;
-                Swap(i, largest);
+                Obmen(i, largest);
                 i = largest;
             }
             return max;
         }
 
-        void Swap(int a, int b)
+        void Obmen(int a, int b)
         {
             WordCount temp = data[a];
             data[a] = data[b];
