@@ -20,14 +20,18 @@ namespace ConsoleApp4
             Console.WriteLine();
             Console.WriteLine("Сбалансировано: " + tree.Proverka(tree.Root));
 
-            tree.Dobavit(1);
-            Console.Write("После вставки 1: ");
+            Console.Write("Введите число для добавления: ");
+            int add = int.Parse(Console.ReadLine());
+            tree.Dobavit(add);
+            Console.Write("После добавления " + add + ": ");
             tree.Obhod(tree.Root);
             Console.WriteLine();
             Console.WriteLine("Сбалансировано: " + tree.Proverka(tree.Root));
 
-            tree.Udalit(10);
-            Console.Write("После удаления 10: ");
+            Console.Write("Введите число для удаления: ");
+            int del = int.Parse(Console.ReadLine());
+            tree.Udalit(del);
+            Console.Write("После удаления " + del + ": ");
             tree.Obhod(tree.Root);
             Console.WriteLine();
             Console.WriteLine("Сбалансировано: " + tree.Proverka(tree.Root));
